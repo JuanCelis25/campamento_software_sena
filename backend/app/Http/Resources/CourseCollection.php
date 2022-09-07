@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Models\Bootcamp;
 
-class BootcampCollection extends ResourceCollection
+class CourseCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +14,7 @@ class BootcampCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        //RetoRNAR UN ARREGLO CON todos los bootcamps
-        return  $this->collection;
+        //retornar un arreglo con todos los bootcamps
+        return $this->collection;
     }
 }

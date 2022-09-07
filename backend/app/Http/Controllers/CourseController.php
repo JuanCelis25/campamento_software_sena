@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Courses;
-
-class CourseController extends Controller
+use App\Http\Controllers\BaseController;
+use App\Http\Resources\CourseCollection;
+use App\Http\Resources\CourseResource;
+class CourseController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +16,14 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        try 
+        {
+            return $this->sendResponse(new CourseCollection(Courses::all()));
+        } 
+        catch (\Exception $e) 
+        {
+            return $this->sendError('Server Error', 500);
+        }
     }
 
     /**
@@ -25,18 +34,16 @@ class CourseController extends Controller
      */
     public function store(Request $request, $id)
     {
-        $curso = new Courses();
+        $curso = new  Course();
         $curso->bootcamp_id = $id;
         $curso->title = $request->title;
         $curso->description = $request->description;
         $curso->weeks = $request->weeks;
         $curso->enroll_cost = $request->enroll_cost;
-        $curso->minimun_skill = $request->minimun_skill;
+        $curso->minimum_skill = $request->minimum_skill;
         $curso->save();
 
-
-
-    return response()->json(["success" => true, "data" => $curso], 200);
+        return response()->json(["success" => true, "data" => $curso], 200);
     }
 
     /**
@@ -47,7 +54,20 @@ class CourseController extends Controller
      */
     public function show($id)
     {
-        //
+        try 
+        {
+            $curso=Courses::find($id);
+            if(!$curso)
+            {
+                return  $this->sendError( "curso no encontrado el id:$id no se encuentra", 400);
+            }
+            return $this->sendResponse(new CourseResource($curso));
+        }
+        catch (\Exception $e)
+        {
+            return  $this->sendError("Serve Error", 500);
+        }
+        
     }
 
     /**
@@ -70,6 +90,19 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try
+        {
+            $c=Courses::find($id);
+            if(!$c)
+            {
+                return $this->sendError("course widt id: $id not found", 400);
+            }
+            $b->delete();
+            return $this->sendResponse(new CourseResource($c));
+        }
+        catch (\Exception $e) 
+        {
+            return $this->sendError('Server error', 500);
+        }
     }
 }

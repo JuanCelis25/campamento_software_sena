@@ -27,6 +27,7 @@ Route::get('prueba', function(){
 //de los bootcamp
 
 Route::apiResource('bootcams', BootcampController::class);
+Route::apiResource('course', CourseController::class);
 
 
 Route::post('courses/{idbootcamp}/create', [CourseController::class, "store"]);
